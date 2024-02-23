@@ -38,7 +38,7 @@ class UserLogin(SQLModel):
 
 
 class Token(SQLModel):
-    token: str
+    access_token: str
     token_type: str
 
 

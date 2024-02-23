@@ -22,4 +22,4 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends()) -> Token:
         if not user or not verify_password(user_credentials.password, user.password):
             credentials_exception()
         access_token = create_token(data={"user_id": str(user.id)})
-    return {"token": access_token, "token_type": "bearer"}
+    return Token(access_token=access_token, token_type="bearer")
