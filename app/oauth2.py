@@ -45,5 +45,8 @@ def verify_token(token: str):
 def get_current_user(token: str = Depends(oauth2_scheme)):
     with Session(engine) as session:
         token = verify_token(token)
-        user = session.exec(select(User).where(User.id == token.id)).first()
+        user = session.exec(
+            select(User)
+            .where(User.id == token.id)
+        ).first()
     return user
