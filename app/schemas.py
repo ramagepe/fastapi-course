@@ -5,25 +5,14 @@ from pydantic import EmailStr
 from sqlmodel import SQLModel
 
 
-class PostBase(SQLModel):
-    title: str
-    content: str
-    published: bool
-
-
-class PostFull(PostBase):
-    id: UUID
-    created_at: datetime
-
-
 class UserCreateRequest(SQLModel):
     email: EmailStr
     password: str
 
 
-class UserCreateResponse(SQLModel):
+class UserOut(SQLModel):
     id: UUID
-    email: EmailStr
+    email: str
 
 
 class UserNoPassword(SQLModel):
@@ -44,3 +33,21 @@ class Token(SQLModel):
 
 class TokenData(SQLModel):
     id: Optional[str] = None
+
+
+class PostOutBase(SQLModel):
+    title: str
+    content: str
+    published: bool
+    user: UserOut
+
+
+class PostOutFull(PostOutBase):
+    id: UUID
+    created_at: datetime
+
+
+class PostIn(SQLModel):
+    title: str
+    content: str
+    published: bool = True

@@ -7,8 +7,8 @@ from ..db import engine
 from ..utils.handlers import not_found_exception
 from ..utils.crypto import hash_password
 from ..models import User
-from ..schemas import UserCreateRequest, UserCreateResponse, UserNoPassword
-from ..oauth2 import verify_token
+from ..schemas import UserCreateRequest, UserOut, UserNoPassword
+from ..oauth2 import get_current_user
 
 
 router = APIRouter(
@@ -17,15 +17,14 @@ router = APIRouter(
 )
 
 
-@router.get("", dependencies=[Depends(verify_token)])
+@router.get("", dependencies=[Depends(get_current_user)])
 def get_users() -> list[User]:
     with Session(engine) as session:
-        users = session.exec(
-            select(User)).all()
+        users = session.exec(select(User)).all()
     return users
 
 
-@router.get("/{id}", dependencies=[Depends(verify_token)])
+@router.get("/{id}", dependencies=[Depends(get_current_user)])
 def get_user(id: UUID) -> UserNoPassword:
     with Session(engine) as session:
         try:
@@ -36,8 +35,8 @@ def get_user(id: UUID) -> UserNoPassword:
     return user
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, dependencies=[Depends(verify_token)])
-def create_user(new_user: UserCreateRequest) -> UserCreateResponse:
+@router.post("", status_code=status.HTTP_201_CREATED)
+def create_user(new_user: UserCreateRequest) -> UserOut:
     with Session(engine) as session:
         new_user.password = hash_password(new_user.password)
         user = User(**new_user.model_dump())
