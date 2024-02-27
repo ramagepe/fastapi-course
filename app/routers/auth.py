@@ -19,7 +19,9 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends()) -> Token:
     with Session(engine) as session:
         user = session.exec(select(User).where(
             User.email == user_credentials.username)).first()
-        if not user or not verify_password(user_credentials.password, user.password):
+        valid_credentials = verify_password(
+            user_credentials.password, user.password)
+        if not user or not valid_credentials:
             unauthorized_exception()
         access_token = create_token(data={"user_id": str(user.id)})
     return Token(access_token=access_token, token_type="bearer")
