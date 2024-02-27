@@ -4,7 +4,7 @@ from sqlmodel import Session, select
 from ..schemas import Token
 from ..db import engine
 from ..models import User
-from ..utils.handlers import credentials_exception
+from ..utils.handlers import unauthorized_exception
 from ..utils.crypto import verify_password
 from ..oauth2 import create_token
 
@@ -20,6 +20,6 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends()) -> Token:
         user = session.exec(select(User).where(
             User.email == user_credentials.username)).first()
         if not user or not verify_password(user_credentials.password, user.password):
-            credentials_exception()
+            unauthorized_exception()
         access_token = create_token(data={"user_id": str(user.id)})
     return Token(access_token=access_token, token_type="bearer")

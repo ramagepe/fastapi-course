@@ -1,7 +1,7 @@
 from typing import Optional
 from uuid import UUID
 from sqlmodel import Field, SQLModel
-from sqlalchemy import text, Column, DateTime
+from sqlalchemy import ForeignKey, text, Column, DateTime
 from datetime import datetime
 
 
@@ -13,6 +13,8 @@ class Post(SQLModel, table=True):
     published: bool = Field(default=True)
     created_at: datetime = Field(default=text(
         "now()"), sa_column=Column(DateTime(timezone=True)))
+    user_id: UUID = Field(sa_column=Column(ForeignKey(
+        "user.id", ondelete="CASCADE", onupdate="CASCADE"), nullable=False))
 
 
 class User(SQLModel, table=True):

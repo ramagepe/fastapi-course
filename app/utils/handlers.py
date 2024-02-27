@@ -7,9 +7,15 @@ def not_found_exception():
         detail="Not found: Invalid id")
 
 
-def credentials_exception():
+def unauthorized_exception():
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+
+
+def forbidden_exception():
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Not authorized to do requested action")
