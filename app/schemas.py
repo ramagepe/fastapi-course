@@ -51,3 +51,13 @@ class PostIn(SQLModel):
     title: str
     content: str
     published: bool = True
+
+
+class VoteIn(SQLModel):
+    post_id: UUID
+    is_upvote: bool
+
+
+class VoteOut(SQLModel):
+    post_id: UUID
+    is_upvote: bool
