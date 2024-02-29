@@ -23,7 +23,7 @@ def vote_post(
     found_post = session.exec(
         select(Post)
         .where(
-            Vote.post_id == new_vote.post_id)
+            Post.id == new_vote.post_id)
     ).first()
 
     if not found_post:
@@ -32,8 +32,8 @@ def vote_post(
     found_vote = session.exec(
         select(Vote)
         .where(
-            Vote.post_id == new_vote.post_id and
-            Vote.user_id == current_user.id)
+            (Vote.post_id == new_vote.post_id) &
+            (Vote.user_id == current_user.id))
     ).first()
 
     if found_vote and new_vote.is_upvote:
